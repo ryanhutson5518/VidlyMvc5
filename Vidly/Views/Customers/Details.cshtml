@@ -1,0 +1,11 @@
+﻿@model Customer
+
+<h1>@Model.Name</h1>
+
+<ul>
+    <li>Membership Type: @Model.MembershipType.Name</li>
+    @if (Model.Birthday != null)
+    {
+        <li>@Model.Birthday.Value.Date</li>
+    }
+</ul>
