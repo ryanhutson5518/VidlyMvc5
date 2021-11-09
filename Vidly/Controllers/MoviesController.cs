@@ -30,16 +30,6 @@ namespace Vidly.Controllers
             return View(movies);
         }
 
-        public async Task<IActionResult> Details(int id, CancellationToken cancellationToken)
-        {
-            var movie = await _vidlyContext.Movies
-                .Include(m => m.Genre)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
-
-            return View(movie);
-        }
-
         public IActionResult Random()
         {
             Movie movie = new()
@@ -98,17 +88,46 @@ namespace Vidly.Controllers
                 Genres = await _vidlyContext.Genres.AsNoTracking().ToListAsync(cancellationToken)
             };
 
+            ViewBag.Title = ""
             return View("MovieForm", viewModel);
         }
 
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
+            var movie = await _vidlyContext.Movies
+                .Include(m => m.Genre)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
 
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            MovieFormViewModel viewModel = new()
+            {
+                Movie = movie,
+                Genres = await _vidlyContext.Genres.AsNoTracking().ToListAsync(cancellationToken)
+            };
+
+            return View("MovieForm", viewModel);
         }
 
-        public async Task<IActionResult> Save()
+        public async Task<IActionResult> Save(Movie movie, CancellationToken cancellationToken)
         {
+            if (movie.Id == 0)
+            {
+                await _vidlyContext.AddAsync(movie, cancellationToken);
+            }
+            else
+            {
+                var movieInDb = await _vidlyContext.Movies.FirstOrDefaultAsync(m => m.Id == movie.Id, cancellationToken);
+                movieInDb.Name = movie.Name;
+                movieInDb.GenreId = movie.GenreId;
+            }
 
+            await _vidlyContext.SaveChangesAsync(cancellationToken);
+            return RedirectToAction("Index", "Movies");
         }
     }
 }

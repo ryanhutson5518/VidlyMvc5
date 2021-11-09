@@ -65,7 +65,7 @@ namespace Vidly.Controllers
         {
             if (customer.Id == 0)
             {
-                _vidlyContext.Add(customer);
+                await _vidlyContext.AddAsync(customer, cancellationToken);
             }
             else
             {
