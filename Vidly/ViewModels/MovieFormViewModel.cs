@@ -11,26 +11,31 @@ namespace Vidly.ViewModels
         // Add movie constructor
         public MovieFormViewModel()
         {
-            Movie.Id = 0;
+            Id = 0;
         }
 
         // Edit movie constructor
         public MovieFormViewModel(Movie movie)
         {
-            Movie.Id = movie.Id;
-            Movie.Name = movie.Name;
-            Movie.GenreId = movie.GenreId;
+            Id = movie.Id;
+            Name = movie.Name;
+            GenreId = movie.GenreId;
         }
 
-        public Movie Movie { get; set; }
-
         public IEnumerable<Genre> Genres { get; set; }
+
+        // Movie properties
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int GenreId { get; set; }
 
         public string Title
         {
             get
             {
-                return Movie.Id != 0 ? "Edit Movie" : "New Movie";
+                return Id != 0 ? "Edit Movie" : "New Movie";
             }
         }
     }

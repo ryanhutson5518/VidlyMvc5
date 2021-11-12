@@ -61,8 +61,19 @@ namespace Vidly.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(Customer customer, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid)
+            {
+                CustomerFormViewModel viewModel = new()
+                {
+                    Customer = customer,
+                    MembershipTypes = await _vidlyContext.MembershipType.ToListAsync(cancellationToken)
+                };
+                return View("CustomerForm", viewModel);
+            }
+
             if (customer.Id == 0)
             {
                 await _vidlyContext.AddAsync(customer, cancellationToken);

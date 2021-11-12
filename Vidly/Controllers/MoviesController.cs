@@ -53,12 +53,12 @@ namespace Vidly.Controllers
             //return RedirectToAction("Index", "Home", new { page = 1, sortBy = "name" });
         }
 
-        public IActionResult Edit(int id)
-        {
-            // movies/edit/5   returns id=5
-            // movies/edit?id=3   return id=3
-            return Content("id=" + id);
-        }
+        //public IActionResult Edit(int id)
+        //{
+        //    // movies/edit/5   returns id=5
+        //    // movies/edit?id=3   return id=3
+        //    return Content("id=" + id);
+        //}
 
         //public IActionResult Index(int? pageIndex, string sortBy)
         //{
@@ -88,7 +88,6 @@ namespace Vidly.Controllers
                 Genres = await _vidlyContext.Genres.AsNoTracking().ToListAsync(cancellationToken)
             };
 
-            ViewBag.Title = ""
             return View("MovieForm", viewModel);
         }
 
@@ -106,7 +105,9 @@ namespace Vidly.Controllers
 
             MovieFormViewModel viewModel = new()
             {
-                Movie = movie,
+                Id = movie.Id,
+                Name = movie.Name,
+                GenreId = movie.GenreId,
                 Genres = await _vidlyContext.Genres.AsNoTracking().ToListAsync(cancellationToken)
             };
 
